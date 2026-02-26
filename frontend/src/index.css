@@ -82,6 +82,29 @@ html {
   50% { opacity: 0.4; }
 }
 
+/* Spinner animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Modal animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Toast slide animations */
 @keyframes toastSlideIn {
   from {
@@ -149,6 +172,19 @@ input:focus:not(:focus-visible) {
 
   .topbar-search {
     max-width: 280px !important;
+  }
+}
+
+/* Topic modal responsive */
+@media (max-width: 768px) {
+  .topic-modal {
+    max-width: 100% !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+  }
+
+  .open-btn-text {
+    display: none;
   }
 }
 
