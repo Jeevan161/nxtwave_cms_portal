@@ -33,7 +33,7 @@ const EnvironmentTabs: React.FC<EnvironmentTabsProps> = ({ activeEnv, onEnvChang
                 ...styles.dot,
                 backgroundColor:
                   env.value === 'beta'
-                    ? '#3B82F6'
+                    ? '#6366F1'
                     : env.value === 'gamma'
                     ? '#F59E0B'
                     : '#EF4444',
@@ -50,40 +50,41 @@ const EnvironmentTabs: React.FC<EnvironmentTabsProps> = ({ activeEnv, onEnvChang
 const styles: Record<string, React.CSSProperties> = {
   container: {
     display: 'flex',
-    gap: '8px',
+    gap: '4px',
     padding: '4px',
-    backgroundColor: '#F1F5F9',
-    borderRadius: '10px',
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.layout.borderRadius,
     width: 'fit-content',
+    border: `1px solid ${theme.colors.border}`,
   },
   tab: {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
     padding: '8px 16px',
-    borderRadius: '8px',
+    borderRadius: theme.layout.borderRadiusSm,
     border: 'none',
     backgroundColor: 'transparent',
-    color: theme.colors.textSecondary,
-    fontSize: theme.typography.fontSize.base,
+    color: theme.colors.textMuted,
+    fontSize: theme.typography.fontSize.md,
     fontWeight: theme.typography.fontWeight.medium,
     fontFamily: theme.typography.fontFamily,
     cursor: 'pointer',
     transition: 'all 150ms ease',
   },
   tabActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.white,
     color: theme.colors.textPrimary,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+    boxShadow: theme.shadows.sm,
     fontWeight: theme.typography.fontWeight.semibold,
   },
   tabProd: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: theme.colors.white,
     color: '#EF4444',
   },
   dot: {
-    width: '8px',
-    height: '8px',
+    width: '7px',
+    height: '7px',
     borderRadius: '50%',
     flexShrink: 0,
   },

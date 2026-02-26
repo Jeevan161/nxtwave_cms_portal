@@ -3,6 +3,7 @@ import { Sidebar } from './components/Sidebar';
 import TopBar from './components/TopBar/TopBar';
 import AllCourses from './containers/Courses/AllCourses';
 import AddCourse from './containers/Courses/AddCourse';
+import { ToastProvider } from './components/Toast';
 import { theme } from './styles/GlobalStyles';
 
 const MOBILE_BREAKPOINT = 768;
@@ -106,6 +107,7 @@ const App: React.FC = () => {
   };
 
   return (
+    <ToastProvider>
     <div
       style={{
         fontFamily: theme.typography.fontFamily,
@@ -164,6 +166,7 @@ const App: React.FC = () => {
         {renderContent()}
       </main>
     </div>
+    </ToastProvider>
   );
 };
 

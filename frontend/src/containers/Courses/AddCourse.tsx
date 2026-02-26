@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { addCourse, type Environment } from '../../services/apiService';
+import { useToast } from '../../components/Toast';
 import { theme } from '../../styles/GlobalStyles';
 
 const portals: { label: string; value: Environment }[] = [
@@ -14,8 +15,9 @@ const AddCourse: React.FC = () => {
   const [courseId, setCourseId] = useState('');
   const [portal, setPortal] = useState<Environment>('beta');
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [courseIdError, setCourseIdError] = useState<string | null>(null);
+  const [inputFocused, setInputFocused] = useState(false);
+  const { addToast } = useToast();
 
   const validateCourseId = (value: string): boolean => {
     if (!value.trim()) {
@@ -42,22 +44,33 @@ const AddCourse: React.FC = () => {
     if (!validateCourseId(courseId)) return;
 
     setSubmitting(true);
-    setResult(null);
     try {
       await addCourse(portal, {
         course_id: courseId.trim(),
         portal,
       });
-      setResult({ type: 'success', message: `Course added successfully to ${portal}!` });
+      addToast({ type: 'success', message: `Course added successfully to ${portal}!` });
       setCourseId('');
     } catch (err) {
-      setResult({
+      addToast({
         type: 'error',
         message: err instanceof Error ? err.message : 'Failed to add course',
       });
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const getInputBorderColor = () => {
+    if (courseIdError) return theme.colors.error;
+    if (inputFocused) return theme.colors.accent;
+    return theme.colors.border;
+  };
+
+  const getInputBoxShadow = () => {
+    if (courseIdError) return '0 0 0 3px rgba(239, 68, 68, 0.1)';
+    if (inputFocused) return theme.shadows.inputFocus;
+    return theme.shadows.input;
   };
 
   return (
@@ -68,48 +81,30 @@ const AddCourse: React.FC = () => {
       </div>
 
       <div style={styles.formCard}>
-        {/* Result Banner */}
-        {result && (
-          <div
-            style={{
-              ...styles.resultBanner,
-              backgroundColor: result.type === 'success' ? '#F0FDF4' : '#FEF2F2',
-              borderColor: result.type === 'success' ? '#BBF7D0' : '#FECACA',
-              color: result.type === 'success' ? '#166534' : '#DC2626',
-            }}
-          >
-            <span style={{ fontWeight: 600 }}>
-              {result.type === 'success' ? '✓' : '✕'}
-            </span>
-            {result.message}
-            <button
-              onClick={() => setResult(null)}
-              style={styles.dismissBtn}
-            >
-              ✕
-            </button>
-          </div>
-        )}
-
         {/* Course ID Field */}
         <div style={styles.field}>
           <label style={styles.label}>
-            Course ID <span style={{ color: '#EF4444' }}>*</span>
+            Course ID <span style={{ color: theme.colors.error }}>*</span>
           </label>
           <input
             type="text"
             value={courseId}
             onChange={handleCourseIdChange}
-            onBlur={() => courseId && validateCourseId(courseId)}
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => {
+              setInputFocused(false);
+              if (courseId) validateCourseId(courseId);
+            }}
             placeholder="e.g., 9d8188cb-fcd7-4390-8494-9c80b00caaee"
             style={{
               ...styles.input,
-              borderColor: courseIdError ? '#EF4444' : '#E2E8F0',
+              borderColor: getInputBorderColor(),
+              boxShadow: getInputBoxShadow(),
               fontFamily: theme.typography.fontFamilyMono,
             }}
           />
           {courseIdError && <span style={styles.errorText}>{courseIdError}</span>}
-          <span style={styles.hint}>Enter a valid UUID for the course</span>
+          {!courseIdError && <span style={styles.hint}>Enter a valid UUID for the course</span>}
         </div>
 
         {/* Portal Field */}
@@ -118,15 +113,25 @@ const AddCourse: React.FC = () => {
           <div className="portal-group" style={styles.portalGroup}>
             {portals.map((p) => {
               const isSelected = portal === p.value;
+              const dotColor = p.value === 'beta' ? '#6366F1' : p.value === 'gamma' ? '#F59E0B' : '#EF4444';
               return (
                 <button
                   key={p.value}
                   onClick={() => setPortal(p.value)}
                   style={{
                     ...styles.portalOption,
-                    borderColor: isSelected ? '#3B82F6' : '#E2E8F0',
-                    backgroundColor: isSelected ? '#EFF6FF' : '#FFFFFF',
-                    color: isSelected ? '#1D4ED8' : theme.colors.textSecondary,
+                    borderColor: isSelected ? dotColor : theme.colors.border,
+                    backgroundColor: isSelected
+                      ? p.value === 'beta' ? '#EEF2FF'
+                      : p.value === 'gamma' ? '#FFFBEB'
+                      : '#FEF2F2'
+                      : theme.colors.white,
+                    color: isSelected
+                      ? p.value === 'beta' ? '#4338CA'
+                      : p.value === 'gamma' ? '#B45309'
+                      : '#DC2626'
+                      : theme.colors.textSecondary,
+                    boxShadow: isSelected ? `0 0 0 3px ${dotColor}15` : 'none',
                   }}
                 >
                   <span
@@ -134,8 +139,7 @@ const AddCourse: React.FC = () => {
                       width: '8px',
                       height: '8px',
                       borderRadius: '50%',
-                      backgroundColor:
-                        p.value === 'beta' ? '#3B82F6' : p.value === 'gamma' ? '#F59E0B' : '#EF4444',
+                      backgroundColor: dotColor,
                       flexShrink: 0,
                     }}
                   />
@@ -171,60 +175,65 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     gap: '24px',
     maxWidth: '600px',
+    margin: '0 auto',
+    justifyContent: 'center',
+    minHeight: '100%',
   },
   title: {
-    fontSize: '20px',
-    fontWeight: 700,
+    fontSize: theme.typography.fontSize.xl,
+    fontWeight: theme.typography.fontWeight.bold,
     color: theme.colors.textPrimary,
     margin: 0,
     letterSpacing: '-0.02em',
   },
   subtitle: {
-    fontSize: '13px',
+    fontSize: theme.typography.fontSize.md,
     color: theme.colors.textMuted,
-    margin: '4px 0 0 0',
+    margin: '6px 0 0 0',
     lineHeight: 1.5,
   },
   formCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: '12px',
-    border: '1px solid #E2E8F0',
-    padding: '24px',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.layout.borderRadiusLg,
+    border: `1px solid ${theme.colors.border}`,
+    padding: '28px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '24px',
+    boxShadow: theme.shadows.card,
   },
   field: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
+    gap: '8px',
   },
   label: {
-    fontSize: '13px',
-    fontWeight: 600,
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: theme.typography.fontWeight.medium,
     color: theme.colors.textPrimary,
   },
   input: {
     width: '100%',
-    height: '40px',
-    padding: '0 12px',
-    border: '1px solid #E2E8F0',
-    borderRadius: '8px',
-    fontSize: '13px',
+    height: '44px',
+    padding: '0 14px',
+    border: `1px solid ${theme.colors.border}`,
+    borderRadius: theme.layout.borderRadiusSm,
+    fontSize: theme.typography.fontSize.md,
     color: theme.colors.textPrimary,
     outline: 'none',
-    transition: 'border-color 150ms ease',
+    transition: 'all 150ms ease',
     fontFamily: theme.typography.fontFamilyMono,
     boxSizing: 'border-box' as const,
+    backgroundColor: theme.colors.white,
   },
   hint: {
-    fontSize: '11px',
+    fontSize: theme.typography.fontSize.sm,
     color: theme.colors.textMuted,
   },
   errorText: {
-    fontSize: '12px',
-    color: '#EF4444',
-    fontWeight: 500,
+    fontSize: theme.typography.fontSize.sm,
+    color: theme.colors.error,
+    fontWeight: theme.typography.fontWeight.medium,
   },
   portalGroup: {
     display: 'flex',
@@ -236,11 +245,11 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '8px',
     padding: '10px 20px',
-    borderRadius: '8px',
-    border: '1.5px solid #E2E8F0',
-    backgroundColor: '#FFFFFF',
-    fontSize: '13px',
-    fontWeight: 600,
+    borderRadius: theme.layout.borderRadiusSm,
+    border: `1.5px solid ${theme.colors.border}`,
+    backgroundColor: theme.colors.white,
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: theme.typography.fontWeight.semibold,
     cursor: 'pointer',
     transition: 'all 150ms ease',
     fontFamily: theme.typography.fontFamily,
@@ -248,41 +257,22 @@ const styles: Record<string, React.CSSProperties> = {
   actions: {
     display: 'flex',
     justifyContent: 'flex-start',
-    paddingTop: '8px',
-    borderTop: '1px solid #F1F5F9',
+    paddingTop: '12px',
+    borderTop: `1px solid ${theme.colors.borderLight}`,
     marginTop: '4px',
   },
   submitBtn: {
-    padding: '10px 24px',
-    borderRadius: '8px',
+    padding: '10px 28px',
+    borderRadius: theme.layout.borderRadiusSm,
     border: 'none',
-    backgroundColor: '#3B82F6',
-    color: '#FFFFFF',
-    fontSize: '13px',
-    fontWeight: 600,
+    backgroundColor: theme.colors.accent,
+    color: theme.colors.white,
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: theme.typography.fontWeight.semibold,
     cursor: 'pointer',
     fontFamily: theme.typography.fontFamily,
-    transition: 'opacity 150ms ease',
-  },
-  resultBanner: {
-    padding: '12px 16px',
-    borderRadius: '10px',
-    border: '1px solid',
-    fontSize: '13px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    flexWrap: 'wrap',
-  },
-  dismissBtn: {
-    marginLeft: 'auto',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '14px',
-    color: 'inherit',
-    opacity: 0.6,
-    padding: '0 4px',
+    transition: 'all 150ms ease',
+    boxShadow: '0 1px 3px rgba(99, 102, 241, 0.3)',
   },
 };
 

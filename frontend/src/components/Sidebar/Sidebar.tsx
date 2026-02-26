@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               marginLeft: 'auto',
               background: 'none',
               border: 'none',
-              color: '#94A3B8',
+              color: '#8B84BF',
               cursor: 'pointer',
               padding: '4px',
               display: 'flex',
@@ -94,10 +94,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={onToggleCollapse}
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color = '#E2E8F0';
+            (e.currentTarget as HTMLButtonElement).style.color = '#D4D0F0';
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color = '#94A3B8';
+            (e.currentTarget as HTMLButtonElement).style.color = '#6E67A0';
           }}
         >
           {isCollapsed ? (

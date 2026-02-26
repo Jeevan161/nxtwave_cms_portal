@@ -12,7 +12,8 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
     left: sidebarWidth,
     right: 0,
     height: layout.topBarHeight,
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(16px)',
     borderBottom: `1px solid ${colors.border}`,
     display: 'flex',
     alignItems: 'center',
@@ -32,8 +33,8 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
   },
 
   hamburgerButton: {
-    width: '36px',
-    height: '36px',
+    width: '38px',
+    height: '38px',
     borderRadius: layout.borderRadiusSm,
     border: 'none',
     backgroundColor: 'transparent',
@@ -53,11 +54,11 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
   },
 
   pageTitle: {
-    fontSize: typography.fontSize.lg,
+    fontSize: typography.fontSize.xl,
     fontWeight: typography.fontWeight.semibold,
     color: colors.textPrimary,
     lineHeight: typography.lineHeight.tight,
-    letterSpacing: '-0.01em',
+    letterSpacing: '-0.02em',
   },
 
   breadcrumbs: {
@@ -99,22 +100,23 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
 
   searchInput: {
     width: '100%',
-    height: '36px',
+    height: '38px',
     padding: `0 ${spacing.lg} 0 40px`,
     backgroundColor: colors.background,
-    border: `1px solid ${colors.borderLight}`,
+    border: `1px solid ${colors.border}`,
     borderRadius: layout.borderRadius,
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.md,
     color: colors.textPrimary,
     outline: 'none',
     transition: `all ${transitions.fast}`,
     fontFamily: typography.fontFamily,
+    boxShadow: shadows.input,
   },
 
   searchInputFocused: {
     backgroundColor: colors.white,
     borderColor: colors.accent,
-    boxShadow: `0 0 0 3px ${colors.accentLight}`,
+    boxShadow: shadows.inputFocus,
   },
 
   searchIcon: {
@@ -133,10 +135,10 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
     right: spacing.md,
     top: '50%',
     transform: 'translateY(-50%)',
-    backgroundColor: colors.white,
+    backgroundColor: colors.surfaceHover,
     border: `1px solid ${colors.border}`,
-    borderRadius: '4px',
-    padding: `1px ${spacing.xs}`,
+    borderRadius: '6px',
+    padding: `2px ${spacing.sm}`,
     fontSize: typography.fontSize.xs,
     color: colors.textMuted,
     fontFamily: typography.fontFamilyMono,
@@ -147,18 +149,18 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
   rightSection: {
     display: 'flex',
     alignItems: 'center',
-    gap: spacing.sm,
+    gap: spacing.xs,
     flex: 1,
     justifyContent: 'flex-end',
   },
 
   iconButton: {
-    width: '36px',
-    height: '36px',
+    width: '38px',
+    height: '38px',
     borderRadius: layout.borderRadiusSm,
     border: 'none',
     backgroundColor: 'transparent',
-    color: colors.textSecondary,
+    color: colors.textMuted,
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -174,8 +176,8 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
 
   notificationDot: {
     position: 'absolute' as const,
-    top: '6px',
-    right: '6px',
+    top: '7px',
+    right: '7px',
     width: '8px',
     height: '8px',
     borderRadius: '50%',
@@ -194,8 +196,8 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
     display: 'flex',
     alignItems: 'center',
     gap: spacing.md,
-    padding: `${spacing.xs} ${spacing.md}`,
-    borderRadius: layout.borderRadiusSm,
+    padding: `${spacing.xs} ${spacing.sm} ${spacing.xs} ${spacing.xs}`,
+    borderRadius: layout.borderRadius,
     cursor: 'pointer',
     transition: `background-color ${transitions.fast}`,
   },
@@ -205,8 +207,8 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
   },
 
   avatar: {
-    width: '32px',
-    height: '32px',
+    width: '34px',
+    height: '34px',
     borderRadius: '50%',
     backgroundColor: colors.accentLight,
     color: colors.accent,
@@ -225,7 +227,7 @@ export const getTopBarStyles = (sidebarWidth: string): StyleMap => ({
   },
 
   userName: {
-    fontSize: typography.fontSize.base,
+    fontSize: typography.fontSize.md,
     fontWeight: typography.fontWeight.medium,
     color: colors.textPrimary,
     whiteSpace: 'nowrap' as const,
