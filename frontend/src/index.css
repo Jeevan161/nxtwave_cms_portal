@@ -1,0 +1,171 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #0F172A;
+  background-color: #F1F5F9;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Reset default button styles for component buttons */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Reset default input styles */
+input, select, textarea {
+  font-family: inherit;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Skeleton animation for loading states */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ==========================================
+   RESPONSIVE STYLES
+   ========================================== */
+
+/* Mobile sidebar overlay backdrop */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Tablet: <= 1024px */
+@media (max-width: 1024px) {
+  /* Hide user info text in topbar */
+  .topbar-user-info {
+    display: none !important;
+  }
+
+  .topbar-user-chevron {
+    display: none !important;
+  }
+
+  /* Shrink search bar */
+  .topbar-search {
+    max-width: 280px !important;
+  }
+}
+
+/* Mobile: <= 768px */
+@media (max-width: 768px) {
+  /* Show hamburger button */
+  .hamburger-btn {
+    display: flex !important;
+  }
+
+  /* Hide sidebar by default, show as overlay when active */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 300ms ease !important;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  /* TopBar takes full width on mobile */
+  .topbar {
+    left: 0 !important;
+  }
+
+  /* Main content takes full width */
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  /* Hide search bar on small mobile */
+  .topbar-search {
+    display: none !important;
+  }
+
+  /* Sidebar overlay visible */
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  /* Responsive course grid */
+  .course-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Responsive header stack */
+  .page-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Portal buttons wrap */
+  .portal-group {
+    flex-wrap: wrap !important;
+  }
+
+  /* Form card full width */
+  .form-page {
+    max-width: 100% !important;
+  }
+}
+
+/* Small mobile: <= 480px */
+@media (max-width: 480px) {
+  /* Smaller padding on main content */
+  .main-content {
+    padding: 16px !important;
+  }
+
+  /* Stack environment tabs */
+  .env-tabs {
+    width: 100% !important;
+  }
+
+  .env-tabs button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Smaller card images */
+  .card-image {
+    height: 140px !important;
+  }
+}

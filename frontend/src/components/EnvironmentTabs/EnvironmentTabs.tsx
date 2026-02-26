@@ -1,0 +1,92 @@
+import React from 'react';
+import type { Environment } from '../../services/apiService';
+import { theme } from '../../styles/GlobalStyles';
+
+interface EnvironmentTabsProps {
+  activeEnv: Environment;
+  onEnvChange: (env: Environment) => void;
+}
+
+const environments: { label: string; value: Environment }[] = [
+  { label: 'Beta', value: 'beta' },
+  { label: 'Gamma', value: 'gamma' },
+  { label: 'Prod', value: 'prod' },
+];
+
+const EnvironmentTabs: React.FC<EnvironmentTabsProps> = ({ activeEnv, onEnvChange }) => {
+  return (
+    <div className="env-tabs" style={styles.container}>
+      {environments.map((env) => {
+        const isActive = activeEnv === env.value;
+        return (
+          <button
+            key={env.value}
+            onClick={() => onEnvChange(env.value)}
+            style={{
+              ...styles.tab,
+              ...(isActive ? styles.tabActive : {}),
+              ...(env.value === 'prod' && isActive ? styles.tabProd : {}),
+            }}
+          >
+            <span
+              style={{
+                ...styles.dot,
+                backgroundColor:
+                  env.value === 'beta'
+                    ? '#3B82F6'
+                    : env.value === 'gamma'
+                    ? '#F59E0B'
+                    : '#EF4444',
+              }}
+            />
+            {env.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    display: 'flex',
+    gap: '8px',
+    padding: '4px',
+    backgroundColor: '#F1F5F9',
+    borderRadius: '10px',
+    width: 'fit-content',
+  },
+  tab: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '8px 16px',
+    borderRadius: '8px',
+    border: 'none',
+    backgroundColor: 'transparent',
+    color: theme.colors.textSecondary,
+    fontSize: theme.typography.fontSize.base,
+    fontWeight: theme.typography.fontWeight.medium,
+    fontFamily: theme.typography.fontFamily,
+    cursor: 'pointer',
+    transition: 'all 150ms ease',
+  },
+  tabActive: {
+    backgroundColor: '#FFFFFF',
+    color: theme.colors.textPrimary,
+    boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+    fontWeight: theme.typography.fontWeight.semibold,
+  },
+  tabProd: {
+    backgroundColor: '#FFFFFF',
+    color: '#EF4444',
+  },
+  dot: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    flexShrink: 0,
+  },
+};
+
+export default EnvironmentTabs;
